@@ -10,16 +10,16 @@
 
 #include "main.h"
 
-#define TIMEOUT                      1000
-#define MPU6050_DEVICE_ADDRESS       0x68 << 1  // 0xD0 I2C adresi
-#define MPU6050_REG_WHO_AM_I         0x75       //Kimlik numarası kayıt adresi
-#define MPU6050_REG_PWR_MGMT_1       0x6B       //Güç yönetimi 1 kaydının adresi
-#define MPU6050_REG_PWR_MGMT_2       0x6C
-#define MPU6050_REG_ACCEL_CONFIG     0x1C       //İvmeölçer Yapılandırma kaydının adresi
-#define MPU6050_REG_GYRO_CONFIG      0x1B       //Jiroskop Yapılandırma kaydının adresi
-#define MPU6050_REG_ACCEL_XOUT_H     0x3B       //İvmeölçer x ekseni
-#define MPU6050_REG_GYRO_XOUT_H      0x43       //Jiroskop x ekseni
-#define MPU6050_REG_TEMP_OUT_H       0x41       //Sıcaklık Ölçümü kayıt adresi
+#define TIMEOUT                       1000
+#define MPU6050_DEVICE_ADDRESS        0x68 << 1  // 0xD0 I2C adresi
+#define MPU6050_REG_WHO_AM_I          0x75       //Kimlik numarası kayıt adresi
+#define MPU6050_REG_PWR_MGMT_1        0x6B       //Güç yönetimi 1 kaydının adresi
+#define MPU6050_REG_PWR_MGMT_2        0x6C
+#define MPU6050_REG_ACCEL_CONFIG      0x1C       //İvmeölçer Yapılandırma kaydının adresi
+#define MPU6050_REG_GYRO_CONFIG       0x1B       //Jiroskop Yapılandırma kaydının adresi
+#define MPU6050_REG_ACCEL_XOUT_H      0x3B       //İvmeölçer x ekseni
+#define MPU6050_REG_GYRO_XOUT_H       0x43       //Jiroskop x ekseni
+#define MPU6050_REG_TEMP_OUT_H        0x41       //Sıcaklık Ölçümü kayıt adresi
 
 #define MPU6050_ACCEL_RANGE_2G        0x00
 #define MPU6050_ACCEL_RANGE_4G        0x01
@@ -83,9 +83,15 @@ typedef struct{
 
 
 int MPU6050_ScanDeviceID(I2C_HandleTypeDef *hi2cx);
-MPU6050InitStatus MPU6050_Init(I2C_HandleTypeDef *hi2cx);
+MPU6050InitStatus MPU6050_Init(I2C_HandleTypeDef *hi2cx, uint8_t AFS_SEL, uint8_t FS_SEL);
 void MPU6050_getAccelValue(I2C_HandleTypeDef *hi2cx, int16_t *accelData);
 void MPU6050_getGyroValue(I2C_HandleTypeDef *hi2cx, int16_t *gyroData);
 float MPU6050_getTempValue(I2C_HandleTypeDef *hi2cx, int16_t *tempData);
+
+void MPU6050_getAccelInG(int16_t *accelData, uint8_t AFS_SEL,
+		float *accelDataInG);
+
+void MPU6050_getGyroIns(int16_t *gyroData, uint8_t FS_SEL,
+		float *gyroDataIns);
 
 #endif /* INC_MPU6050_H_ */

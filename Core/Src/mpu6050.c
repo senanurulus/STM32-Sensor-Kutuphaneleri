@@ -45,7 +45,7 @@ static MPU6050WriteStatus MPU6050_WriteRegisterData(I2C_HandleTypeDef *hi2cx,
 	return WRITE_FAIL;
 }
 
-MPU6050InitStatus MPU6050_Init(I2C_HandleTypeDef *hi2cx) {
+MPU6050InitStatus MPU6050_Init(I2C_HandleTypeDef *hi2cx, uint8_t AFS_SEL, uint8_t FS_SEL) {
 
 	uint8_t dataBuffer = 0;
 
@@ -74,7 +74,7 @@ MPU6050InitStatus MPU6050_Init(I2C_HandleTypeDef *hi2cx) {
 	AccelConfigRegister_t accelConfig = { 0 };
 
 	accelConfig.Reserved = 0;
-	accelConfig.AFS_Sel = MPU6050_ACCEL_RANGE_8G;
+	accelConfig.AFS_Sel = AFS_SEL;
 	accelConfig.ZA_ST = 0;
 	accelConfig.YA_ST = 0;
 	accelConfig.XA_ST = 0;
@@ -85,7 +85,7 @@ MPU6050InitStatus MPU6050_Init(I2C_HandleTypeDef *hi2cx) {
 	GyroConfigRegister_t gyroConfig = {0};
 
 	gyroConfig.Reserved = 0;
-	gyroConfig.FS_Sel = MPU6050_GYRO_RANGE_1000;
+	gyroConfig.FS_Sel = FS_SEL;
 	gyroConfig.ZG_ST = 0;
 	gyroConfig.YG_ST = 0;
 	gyroConfig.XG_ST = 0;
@@ -138,6 +138,54 @@ float MPU6050_getTempValue(I2C_HandleTypeDef *hi2cx, int16_t *tempData) {
 	return temperature;
 
 }
+
+
+void MPU6050_getAccelInG(int16_t *accelData, uint8_t AFS_SEL,
+		float *accelDataInG) {
+
+	if (AFS_SEL == 0x00) {
+		accelDataInG[0] = (float) accelData[0] / 16384.0;
+		accelDataInG[1] = (float) accelData[1] / 16384.0;
+		accelDataInG[2] = (float) accelData[2] / 16384.0;
+	} else if (AFS_SEL == 0x01) {
+		accelDataInG[0] = (float) accelData[0] / 8192.0;
+		accelDataInG[1] = (float) accelData[1] / 8192.0;
+		accelDataInG[2] = (float) accelData[2] / 8192.0;
+	}else if (AFS_SEL == 0x02) {
+		accelDataInG[0] = (float) accelData[0] / 4096.0;
+		accelDataInG[1] = (float) accelData[1] / 4096.0;
+		accelDataInG[2] = (float) accelData[2] / 4096.0;
+	}else if (AFS_SEL == 0x03) {
+		accelDataInG[0] = (float) accelData[0] / 2048.0;
+		accelDataInG[1] = (float) accelData[1] / 2048.0;
+		accelDataInG[2] = (float) accelData[2] / 2048.0;
+	}
+
+}   //Değerlerin g(konum) cinsine çevrimesi
+
+
+void MPU6050_getGyroIns(int16_t *gyroData, uint8_t FS_SEL,
+		float *gyroDataIns) {
+
+	if (FS_SEL == 0x00) {
+		gyroDataIns[0] = (float) gyroData[0] / 131.0;
+		gyroDataIns[1] = (float) gyroData[1] / 131.0;
+		gyroDataIns[2] = (float) gyroData[2] / 131.0;
+	} else if (FS_SEL == 0x01) {
+		gyroDataIns[0] = (float) gyroData[0] / 65.5;
+		gyroDataIns[1] = (float) gyroData[1] / 65.5;
+		gyroDataIns[2] = (float) gyroData[2] / 65.5;
+	}else if (FS_SEL == 0x02) {
+		gyroDataIns[0] = (float) gyroData[0] / 32.8;
+		gyroDataIns[1] = (float) gyroData[1] / 32.8;
+		gyroDataIns[2] = (float) gyroData[2] / 32.8;
+	}else if (FS_SEL == 0x03) {
+		gyroDataIns[0] = (float) gyroData[0] / 16.4;
+		gyroDataIns[1] = (float) gyroData[1] / 16.4;
+		gyroDataIns[2] = (float) gyroData[2] / 16.4;
+	}
+
+}   //Değerlerin s(dönme) cinsine çevrilmesi
 
 
 

@@ -56,6 +56,8 @@ int16_t accelData[3];
 int16_t gyroData[3];
 int16_t tempData;
 float temperature;
+float accelDataInG[3];
+float gyroDataIns[3];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,7 +112,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   deviceAddress = MPU6050_ScanDeviceID(&hi2c1);
-  MPU6050_Init(&hi2c1);
+  MPU6050_Init(&hi2c1, MPU6050_ACCEL_RANGE_8G, MPU6050_GYRO_RANGE_1000 );
 
   /* USER CODE END 2 */
 
@@ -124,6 +126,10 @@ int main(void)
 	  MPU6050_getAccelValue(&hi2c1, accelData);//accelData array olduğundan adres eklemeye gerek yok.
 	  MPU6050_getGyroValue(&hi2c1, gyroData);
 	  temperature = MPU6050_getTempValue(&hi2c1, &tempData);
+
+	  MPU6050_getAccelInG(accelData, MPU6050_ACCEL_RANGE_8G, accelDataInG);
+      MPU6050_getGyroIns(gyroData, MPU6050_GYRO_RANGE_1000, gyroDataIns);
+
 
   }
   /* USER CODE END 3 */
